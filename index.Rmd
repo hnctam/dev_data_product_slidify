@@ -1,0 +1,89 @@
+---
+title       : Stock Analysis
+subtitle    : Stock Analysis with Quantmod
+author      : Tam Nguyen Chinh Ho
+job         : Project Manager
+framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      # 
+widgets     : []            # {mathjax, quiz, bootstrap}
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+---
+
+## Stock Analysis Introduction
+- The application to utilize library quantmod in order to:
+  > - Stock Analysis and Prediction : SAP
+  > - Polling stock data from some providers
+  > - Analyze data and output with trend charts from varies of durations: all, 1 month, 3 months, 6 months, 1 year
+  > - Add finance indicators in order to have the better information to decide and predict more precisely for the stock quote next prices
+
+- The target of this application is to predict the stock value --> we can extend by adding machine learning for this purpose. With this application, user can:
+  > - Select a stock symbol
+  > - Select an interested analysis duration
+  > - Select technical indicators
+
+--- .class #Stock Analysis Introduction
+
+## Stock Analysis Introduction - Cont 1
+- User can select the interest duration via slider bar
+- User can view the downloaded data from server and download to local PC
+- The application is in opened status, which is still needed to receive ideas, comments, feedbacks and even community contributions
+- Application is simple and in draft version, enough for demonstration the idea only
+
+--- .class #Stock Analysis Introduction - Cont 1
+
+
+## Quantmod library overview
+
+- Quantitative Financial Modelling & Trading Framework
+- Designed to assist the quantitative trader in the development, testing, and deployment of statistically based trading models
+- Provide a series of technical indicator which helps investors to get more information for their decisions
+
+--- .class #Quantmod library overview
+
+## How SAP work - Getting and Filtering data
+
+```{r, echo=FALSE}
+library(quantmod)
+
+downloadSymbol <- function(environment, symbol) {
+  if (is.null(environment[[symbol]])) {
+    environment[[symbol]] <- getSymbols(symbol, auto.assign = FALSE)
+  }
+  
+  environment[[symbol]]
+}
+
+```
+
+- Download the stock data
+
+```{r, echo=TRUE, message=FALSE}
+# To initialize and new environment for caching purpose
+system_environment <- new.env()
+symbol_data <- downloadSymbol(system_environment, "AAPL")
+```
+
+- Filter data via a specific duration
+```{r, echo=TRUE}
+in_duration_data <- last(symbol_data, "3 months")
+```
+
+--- .class #How SAP work - Getting and Filtering data
+
+
+## How SAP work - Plotting result
+
+- Render candle chart and Add technical indicators
+
+```{r, echo=FALSE, message=FALSE}
+library(quantmod)
+
+plot <- candleChart(in_duration_data, name = "AAPL", multi.col=TRUE, theme = "white")
+addBBands(plot)
+addEVWMA(plot)
+print(plot)
+```
+
+--- .class #How SAP work - Plotting result
